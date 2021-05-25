@@ -23,6 +23,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::prefix('v1')->group(function(){
     Route::resources([
         'real-states' => RealStateController::class,
-
     ]);
 });
