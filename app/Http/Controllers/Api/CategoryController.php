@@ -135,7 +135,6 @@ class CategoryController extends Controller
 	{
 		try {
 			$category = $this->category->findOrFail($id);
-
 			return response()->json([
 				'data' => $category->realStates
 			], 200);

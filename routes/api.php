@@ -32,4 +32,5 @@ Route::prefix('v1')->group(function(){
     Route::resources([
         'categories' => CategoryController::class,
     ]);
+    Route::get('categories/{id}/real-state', [CategoryController::class, 'realState']);
 });

@@ -13,7 +13,14 @@ class RealState extends Model
         'user_id', 'title', 'description', 'content', 'price', 'slug', 'bedrooms', 'bathrooms', 'property_area', 'total_property_area'
     ];
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'real_state_categories');
+    }
+
 }
