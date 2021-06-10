@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Auth\LoginJwtController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\RealStateController;
 use App\Http\Controllers\Api\RealStatePhotoController;
+use App\Http\Controllers\Api\RealStateSearchController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('search',[RealStateSearchController::class, 'index']);
+
+Route::get('search/{real_state_id}',[RealStateSearchController::class, 'show']);
+
 Route::prefix('v1')->group(function(){
 
     Route::post('login', [LoginJwtController::class, 'login'])->name('login');
@@ -36,9 +41,11 @@ Route::prefix('v1')->group(function(){
         Route::resources([
             'real-states' => RealStateController::class,
         ]);
+
         Route::resources([
             'users' => UserController::class,
         ]);
+
         Route::resources([
             'categories' => CategoryController::class,
         ]);
