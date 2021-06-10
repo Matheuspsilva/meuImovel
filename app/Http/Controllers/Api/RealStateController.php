@@ -6,6 +6,7 @@ use App\Api\ApiMessages;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RealStateRequest;
 use App\Models\RealState;
+use Illuminate\Support\Facades\Auth;
 
 class RealStateController extends Controller
 {
@@ -16,15 +17,16 @@ class RealStateController extends Controller
     }
 
     public function index(){
-        $realState = $this->realState->paginate('10');
-        return response()->json($realState, 200);
+        $realStates = Auth('api')->user()->real_state();
+        return response()->json($realStates->paginate(10), 200);
     }
 
-    public function show($id){
+    public function show($id)
+    {
 
         try {
 
-            $realState = $this->realState->with('photos')->findOrFail($id);
+            $realState = Auth('api')->user()->real_state()->with('photos')->findOrFail($id);
 
             return response()->json([
                 'data' => $realState
@@ -36,11 +38,13 @@ class RealStateController extends Controller
         }
     }
 
-    public function store(RealStateRequest $request){
+    public function store(RealStateRequest $request)
+    {
         $data = $request->all();
         $images = $request->file('images');
 
         try {
+            $data['user_id'] = Auth('api')->user()->id;
 
             $realState = $this->realState->create($data);
 
@@ -71,13 +75,14 @@ class RealStateController extends Controller
 
     }
 
-    public function update($id, RealStateRequest $request){
+    public function update($id, RealStateRequest $request)
+    {
         $data = $request->all();
         $images = $request->file('images');
 
         try {
 
-            $realState = $this->realState->findOrFail($id);
+            $realState = Auth('api')->user()->real_state()->findOrFail($id);
             $realState->update($data);
 
 
@@ -107,11 +112,12 @@ class RealStateController extends Controller
         }
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
 
         try {
 
-            $realState = $this->realState->findOrFail($id);
+            $realState = Auth('api')->user()->real_state()->findOrFail($id);
             $realState->delete();
 
             return response()->json([
@@ -119,6 +125,7 @@ class RealStateController extends Controller
                     'msg' => 'Imóvel removido com sucesso !'
                 ]
             ], 200);
+
         } catch (\Exception $e) {
             $message = new ApiMessages($e->getMessage());
             return response()->json($message->getMessage(),401);
